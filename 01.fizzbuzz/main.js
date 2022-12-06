@@ -1,13 +1,12 @@
-let num = 1;
-while (num < 16) {
-  if (num % 5 === 0 && num % 3 === 0) {
+for (let i = 1; i < 16; i++){
+  if (i % 5 === 0 && i % 3 === 0) {
     console.log("fizzbuzz");
-  } else if (num % 5 === 0) {
+  } else if (i % 5 === 0) {
     console.log("buzz");
-  } else if (num % 3 === 0) {
+  } else if (i % 3 === 0) {
     console.log("fizz");
   } else {
-    console.log(num);
+    console.log(i);
   }
-  num += 1;
 }
+console.log('end');
