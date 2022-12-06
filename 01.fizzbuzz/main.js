@@ -1,4 +1,4 @@
-for (let i = 1; i < 16; i++){
+for (let i = 1; i < 21; i++){
   if (i % 5 === 0 && i % 3 === 0) {
     console.log("fizzbuzz");
   } else if (i % 5 === 0) {
@@ -9,4 +9,3 @@ for (let i = 1; i < 16; i++){
     console.log(i);
   }
 }
-console.log('end');
