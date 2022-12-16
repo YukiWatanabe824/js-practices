@@ -17,6 +17,7 @@ function generate_full_days(date) {
 
   let blanks = date.startOf("month").weekday();
   let full_days = new Array();
+
   for (let i = 1; i <= blanks; i++) {
     full_days.push("  ");
   }
@@ -28,6 +29,7 @@ function generate_full_days(date) {
   full_days = full_days.map(function (element) {
     return element.toString().padStart(2, " ");
   });
+
   return full_days;
 }
 
