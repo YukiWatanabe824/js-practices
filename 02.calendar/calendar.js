@@ -22,7 +22,7 @@ full_days = full_days.map(function(element){
 })
 
 
-console.log("      12月 2022")
+console.log(`      ${dt.month()+1}月 ${dt.year()}`)
 console.log("日 月 火 水 木 金 土")
 for(let i = 0; i < full_days.length; i++){
   if ((i + 1) % 7 === 0){
