@@ -1,20 +1,33 @@
-console.log("      12月 2022")
-console.log("日 月 火 水 木 金 土")
+const moment = require('moment');
+let dt = moment();
+let first_date = moment([dt.year(), dt.month(), 1])
+let last_date = dt.endOf('month')
 
-let calendar = new Array(
-"             1  2  3",
-" 4  5  6  7  8  9 10",
-"11 12 13 14 15 16 17",
-"18 19 20 21 22 23 24",
-"25 26 27 28 29 30 31"
-)
+const LAST_DAY = last_date.date()
 
-for(let i in calendar){
-  console.log(calendar[i]);
+let blanks = first_date.weekday()
+debugger
+let full_days = new Array()
+
+for(let i = 1; i <= blanks; i++){
+  full_days.push('  ')
 }
 
-let date = new Date()
-//let first_date = date(
-console.log(date.getFullYear() + "年")
-console.log((date.getMonth()+ 1) + "月" + date.getDate() + "日")
+for(let i = 1; i <= LAST_DAY; i++){
+  full_days.push(i)
+}
 
+full_days = full_days.map(function(element){
+  return element.toString().padStart(2, ' ')
+})
+
+
+console.log("      12月 2022")
+console.log("日 月 火 水 木 金 土")
+for(let i = 0; i < full_days.length; i++){
+  if ((i + 1) % 7 === 0){
+    process.stdout.write(full_days[i] + '\n')
+  }else{
+    process.stdout.write(full_days[i] + ' ')
+  }
+}
