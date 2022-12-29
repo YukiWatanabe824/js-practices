@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fetch HTML</title>
+  </head>
+  <body>
+    <h1>Fetch HTML</h1>
+    <script>
+      async function FetchUrl(url) {
+        const response = await fetch(url);
+        return response;
+      }
+      FetchUrl("https://bootcamp.fjord.jp/")
+        .then((response) => {
+          return response.text();
+        })
+        .then((text) => console.log(text));
+    </script>
+  </body>
+</html>
