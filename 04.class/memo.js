@@ -6,7 +6,8 @@ class Memo {
   async saveNewMemo(lines) {
     const memoList = await this.makeNewMemo(lines);
 
-    this.storageFile.save(JSON.stringify(memoList));
+    await this.storageFile.save(memoList);
+    console.log("データの保存が完了しました");
   }
 
   async makeNewMemo(lines) {
@@ -28,7 +29,6 @@ class Memo {
       memolist = [];
       maxId = 0;
     } else {
-      memolist = JSON.parse(memolist);
       maxId = Math.max(...memolist.map((p) => p.id));
     }
     return [memolist, maxId];
@@ -69,7 +69,7 @@ class Option {
   }
 
   destroyMemo() {
-    const memoList = JSON.parse(this.storageFile.read());
+    const memoList = this.storageFile.read();
 
     const titleAndId = memoList.map((p) => ({
       name: p.id,
@@ -85,33 +85,38 @@ class Option {
         choices: titleAndId,
       };
       const answer = await Enquirer.prompt(question);
-      const newMemos = memoList.filter((memo) => memo.id != answer.id);
-      this.storageFile.save(JSON.stringify(newMemos));
+      this.storageFile.delete(memoList, answer.id);
+      console.log("メモを削除しました");
     })();
   }
+
   showMemo() {
-    const memoList = JSON.parse(this.storageFile.read());
+    const memoList = this.storageFile.read();
 
     const titleAndContent = memoList.map((p) => ({
-      name: p.memo,
+      name: p.title,
       message: p.title,
+      value: p.memo,
     }));
 
     const Enquirer = require("enquirer");
     (async () => {
       const question = {
         type: "select",
-        name: "content",
+        name: "value",
         message: "表示するメモを選んでください",
         choices: titleAndContent,
+        result() {
+          return this.focused.value;
+        },
       };
       const answer = await Enquirer.prompt(question);
-      console.log(`\n${answer.content}`);
+      console.log(answer.value);
     })();
   }
 
   generateTitleList() {
-    const memoList = JSON.parse(this.storageFile.read());
+    const memoList = this.storageFile.read();
 
     const titleList = memoList.map((p) => p.memo.split("\n")[0]);
     return titleList;
@@ -122,9 +127,7 @@ class StorageFile {
   read() {
     const { readFileSync } = require("node:fs");
     this.checkExistMemosFile();
-    const contents = readFileSync("./memos.json", "utf8");
-
-    return contents;
+    return JSON.parse(readFileSync("./memos.json", "utf8"));
   }
 
   checkExistMemosFile() {
@@ -137,14 +140,15 @@ class StorageFile {
   }
 
   async save(data) {
+    data = JSON.stringify(data);
     const { writeFile } = require("node:fs/promises");
     const promise = writeFile("memos.json", data);
-    await promise;
-    console.log("データの保存が完了しました");
+    return promise;
   }
 
-  delete(id) {
-    const memoList = this.read();
+  async delete(memoList, memoId) {
+    const newMemos = memoList.filter((memo) => memo.id != memoId);
+    return this.save(newMemos);
   }
 }
 
