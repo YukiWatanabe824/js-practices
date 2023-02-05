@@ -127,7 +127,13 @@ class StorageFile {
   read() {
     const { readFileSync } = require("node:fs");
     this.checkExistMemosFile();
-    return JSON.parse(readFileSync("./memos.json", "utf8"));
+    const memolist = readFileSync("./memos.json", "utf8")
+
+    if (memolist === "") {
+      return memolist
+    } else {
+      return JSON.parse(memolist)
+    }
   }
 
   checkExistMemosFile() {
