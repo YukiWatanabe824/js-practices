@@ -34,7 +34,7 @@ class Memo {
     return [memolist, maxId];
   }
 
-  newMemo() {
+  createMemo() {
     const readline = require("node:readline");
     const process = require("node:process");
 
@@ -170,6 +170,6 @@ if (args.length > 3) {
 } else if (args.includes("-l")) {
   exec.displaytTitle();
 } else {
-  const main = new Memo();
-  main.newMemo();
+  const memo = new Memo();
+  memo.createMemo();
 }
