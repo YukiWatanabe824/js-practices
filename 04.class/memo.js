@@ -1,4 +1,4 @@
-class Memo {
+class MemoGetter {
   constructor() {
     this.storageFile = new StorageFile();
   }
@@ -34,6 +34,13 @@ class Memo {
     return [memolist, maxId];
   }
 
+}
+
+class MemoEditer{
+  constructor() {
+    this.storageFile = new StorageFile();
+  }
+
   createMemo() {
     const readline = require("node:readline");
     const process = require("node:process");
@@ -43,7 +50,8 @@ class Memo {
       output: process.stdout,
     });
     let lines = [];
-    console.log("メモを入力してください");
+
+    if (process.stdin.isTTY) {console.log("メモを入力してください")}
 
     process.stdin.resume();
     process.stdin.setEncoding("utf8");
@@ -53,14 +61,9 @@ class Memo {
     });
 
     rl.on("close", () => {
-      this.saveNewMemo(lines);
+      const memoGetter = new MemoGetter()
+      memoGetter.saveNewMemo(lines);
     });
-  }
-}
-
-class Option {
-  constructor() {
-    this.storageFile = new StorageFile();
   }
 
   displaytTitle() {
@@ -158,18 +161,17 @@ class StorageFile {
   }
 }
 
-const exec = new Option();
+const memoEditer = new MemoEditer();
 const args = process.argv;
 
 if (args.length > 3) {
   console.log("illegal option");
 } else if (args.includes("-d")) {
-  exec.destroyMemo();
+  memoEditer.destroyMemo();
 } else if (args.includes("-r")) {
-  exec.showMemo();
+  memoEditer.showMemo();
 } else if (args.includes("-l")) {
-  exec.displaytTitle();
+  memoEditer.displaytTitle();
 } else {
-  const memo = new Memo();
-  memo.createMemo();
+  memoEditer.createMemo();
 }
