@@ -3,6 +3,43 @@ class MemoGetter {
     this.storageFile = new StorageFile();
   }
 
+  generateTitleList() {
+    const memoList = this.storageFile.read();
+
+    const titleList = memoList.map((p) => p.memo.split("\n")[0]);
+    return titleList;
+  }
+
+  displayTitle() {
+    const titleList = this.generateTitleList();
+    console.log(titleList.join("\n"));
+  }
+
+  showMemo() {
+    const memoList = this.storageFile.read();
+
+    const titleAndContent = memoList.map((p) => ({
+      name: p.title,
+      message: p.title,
+      value: p.memo,
+    }));
+
+    const Enquirer = require("enquirer");
+    (async () => {
+      const question = {
+        type: "select",
+        name: "value",
+        message: "表示するメモを選んでください",
+        choices: titleAndContent,
+        result() {
+          return this.focused.value;
+        },
+      };
+      const answer = await Enquirer.prompt(question);
+      console.log(answer.value);
+    })();
+  }
+
   async saveNewMemo(lines) {
     const memoList = await this.makeNewMemo(lines);
 
@@ -67,11 +104,6 @@ class MemoEditer {
     });
   }
 
-  displaytTitle() {
-    const titleList = this.generateTitleList();
-    console.log(titleList.join("\n"));
-  }
-
   destroyMemo() {
     const memoList = this.storageFile.read();
 
@@ -92,38 +124,6 @@ class MemoEditer {
       this.storageFile.delete(memoList, answer.id);
       console.log("メモを削除しました");
     })();
-  }
-
-  showMemo() {
-    const memoList = this.storageFile.read();
-
-    const titleAndContent = memoList.map((p) => ({
-      name: p.title,
-      message: p.title,
-      value: p.memo,
-    }));
-
-    const Enquirer = require("enquirer");
-    (async () => {
-      const question = {
-        type: "select",
-        name: "value",
-        message: "表示するメモを選んでください",
-        choices: titleAndContent,
-        result() {
-          return this.focused.value;
-        },
-      };
-      const answer = await Enquirer.prompt(question);
-      console.log(answer.value);
-    })();
-  }
-
-  generateTitleList() {
-    const memoList = this.storageFile.read();
-
-    const titleList = memoList.map((p) => p.memo.split("\n")[0]);
-    return titleList;
   }
 }
 
@@ -163,6 +163,7 @@ class StorageFile {
 }
 
 const memoEditer = new MemoEditer();
+const memoGetter = new MemoGetter();
 const args = process.argv;
 
 if (args.length > 3) {
@@ -170,9 +171,9 @@ if (args.length > 3) {
 } else if (args.includes("-d")) {
   memoEditer.destroyMemo();
 } else if (args.includes("-r")) {
-  memoEditer.showMemo();
+  memoGetter.showMemo();
 } else if (args.includes("-l")) {
-  memoEditer.displaytTitle();
+  memoGetter.displayTitle();
 } else {
   memoEditer.createMemo();
 }
