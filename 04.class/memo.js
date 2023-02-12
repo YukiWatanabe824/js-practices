@@ -33,10 +33,9 @@ class MemoGetter {
     }
     return [memolist, maxId];
   }
-
 }
 
-class MemoEditer{
+class MemoEditer {
   constructor() {
     this.storageFile = new StorageFile();
   }
@@ -51,7 +50,9 @@ class MemoEditer{
     });
     let lines = [];
 
-    if (process.stdin.isTTY) {console.log("メモを入力してください")}
+    if (process.stdin.isTTY) {
+      console.log("メモを入力してください");
+    }
 
     process.stdin.resume();
     process.stdin.setEncoding("utf8");
@@ -61,7 +62,7 @@ class MemoEditer{
     });
 
     rl.on("close", () => {
-      const memoGetter = new MemoGetter()
+      const memoGetter = new MemoGetter();
       memoGetter.saveNewMemo(lines);
     });
   }
@@ -130,12 +131,12 @@ class StorageFile {
   read() {
     const { readFileSync } = require("node:fs");
     this.checkExistMemosFile();
-    const memolist = readFileSync("./memos.json", "utf8")
+    const memolist = readFileSync("./memos.json", "utf8");
 
     if (memolist === "") {
-      return memolist
+      return memolist;
     } else {
-      return JSON.parse(memolist)
+      return JSON.parse(memolist);
     }
   }
 
