@@ -39,6 +39,38 @@ class MemoGetter {
       console.log(answer.value);
     })();
   }
+}
+
+class MemoEditer {
+  constructor() {
+    this.storageFile = new StorageFile();
+  }
+
+  createMemo() {
+    const readline = require("node:readline");
+    const process = require("node:process");
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    let lines = [];
+
+    if (process.stdin.isTTY) {
+      console.log("メモを入力してください");
+    }
+
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+
+    rl.on("line", (line) => {
+      lines.push(line);
+    });
+
+    rl.on("close", () => {
+      this.saveNewMemo(lines);
+    });
+  }
 
   async saveNewMemo(lines) {
     const memoList = await this.makeNewMemo(lines);
@@ -69,39 +101,6 @@ class MemoGetter {
       maxId = Math.max(...memolist.map((p) => p.id));
     }
     return [memolist, maxId];
-  }
-}
-
-class MemoEditer {
-  constructor() {
-    this.storageFile = new StorageFile();
-  }
-
-  createMemo() {
-    const readline = require("node:readline");
-    const process = require("node:process");
-
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    let lines = [];
-
-    if (process.stdin.isTTY) {
-      console.log("メモを入力してください");
-    }
-
-    process.stdin.resume();
-    process.stdin.setEncoding("utf8");
-
-    rl.on("line", (line) => {
-      lines.push(line);
-    });
-
-    rl.on("close", () => {
-      const memoGetter = new MemoGetter();
-      memoGetter.saveNewMemo(lines);
-    });
   }
 
   destroyMemo() {
